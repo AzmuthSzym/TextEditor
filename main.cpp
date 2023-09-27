@@ -1,9 +1,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 #include "TextControl.h"
+#include "Menu.h"
 #include "MenuBtn.h"
-#include <iostream>
 #include <Windows.h>
+#include <vector>
+
 
 int main()
 {
@@ -11,16 +13,17 @@ int main()
     int x = GetSystemMetrics(SM_CXSCREEN);
     int y = GetSystemMetrics(SM_CYSCREEN);
 
-    TextControl UserText;
-    MenuBtn menu("File");
-
-    sf::Transform transformTxt;
-    transformTxt.translate(20, 100);
-    sf::Transform transformRect;
-    transformRect.translate(10, 10);
-
     sf::RenderWindow window(sf::VideoMode(x, y), "Text Editor");
+
+    sf::Font mainFont;
+    mainFont.loadFromFile("MotionPicture_PersonalUseOnly.ttf");
+
+    TextControl UserText;
+    sf::Transform transformTxt;
+    std::vector<MenuBtn> menuVector{ MenuBtn("File", mainFont), MenuBtn("Close", mainFont) };
     
+    transformTxt.translate(20, 100);
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -32,17 +35,25 @@ int main()
             {
                 UserText.handleEvent(event);
             }
-            if (menu.rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+            for (auto& menuBtn : menuVector)
             {
-                menu.menuText.setFillColor(sf::Color::Blue);
+                if (menuBtn.rect.getGlobalBounds().contains(window.mapPixelToCoords(sf::Mouse::getPosition(window))) && sf::Mouse::isButtonPressed(sf::Mouse::Left))
+                {
+                    menuBtn.menuText.setFillColor(sf::Color::Blue);
+                }
             }
             
         }
 
         window.clear();
-
-        window.draw(menu.rect, transformRect);
-        window.draw(menu.menuText, transformRect);
+        for (int i = 0; i < menuVector.size(); i++)
+        {
+            int test = 10 + (130 * i);
+            menuVector[i].rect.setPosition(test, 10);
+            menuVector[i].setPos();
+            window.draw(menuVector[i].rect);
+            window.draw(menuVector[i].menuText);
+        }
 
         window.draw(UserText.playerText, transformTxt);
         window.display();
