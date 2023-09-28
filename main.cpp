@@ -20,7 +20,7 @@ int main()
 
     TextControl UserText;
     sf::Transform transformTxt;
-    std::vector<MenuBtn> menuVector{ MenuBtn("File", mainFont), MenuBtn("Close", mainFont) };
+    std::vector<MenuBtn> menuVector{ MenuBtn("File", mainFont), MenuBtn("Load", mainFont), MenuBtn("Save", mainFont), MenuBtn("Close", mainFont) };
     
     transformTxt.translate(20, 100);
 
